@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conheça o MPPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+
+    <script src="{{ url_for('static', path='js/player2.js') }}" defer></script>
+    <link
+      rel="icon"
+      type="image/jpg"
+      href="{{ url_for('static', path='img/labiaicon.jpg') }}"
+    />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        min-height: 100vh;
+        color: #ecf0f1;
+      }
+
+      .orbitron-font {
+        font-family: "Orbitron", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 500;
+        font-style: normal;
+        text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+      }
+
+      .chat-container {
+        background-color: rgba(44, 62, 80, 0.8);
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .bot-image {
+        max-width: 100%;
+        height: auto;
+        filter: drop-shadow(0 0 15px rgba(52, 152, 219, 0.5));
+        transition: transform 0.3s ease;
+      }
+
+      .bot-image:hover {
+        transform: scale(1.05);
+      }
+
+      textarea {
+        background-color: rgba(236, 240, 241, 0.1);
+        color: #ecf0f1;
+        border: 1px solid rgba(52, 152, 219, 0.5);
+        border-radius: 8px;
+        resize: none;
+        transition: all 0.3s ease;
+      }
+
+      textarea:focus {
+        background-color: rgba(236, 240, 241, 0.2);
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        color: #ecf0f1;
+      }
+
+      label {
+        font-weight: 500;
+        color: var(--accent-color);
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .btn-chat {
+        background-color: var(--accent-color);
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-chat:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-close-chat {
+        background-color: #e74c3c;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-close-chat:hover {
+        background-color: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-send {
+        background-color: #2ecc71;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: none; /* Inicialmente escondido */
+      }
+
+      .btn-send:hover {
+        background-color: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      #status {
+        color: #2ecc71;
+        font-weight: 500;
+      }
+
+      .divider {
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent-color),
+          transparent
+        );
+        margin: 1.5rem 0;
+      }
+
+      .input-controls {
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body class="py-4">
+    <div class="container">
+      <h2 class="orbitron-font mb-4 text-center">{{ title }}</h2>
+
+      <div id="conteudo" class="row g-4 align-items-center">
+        <!-- Coluna da imagem (visível apenas em desktop) -->
+        <div class="col-lg-5 d-none d-lg-block">
+          <div class="text-center p-3">
+            <img
+              src="{{ url_for('static', path='img/bot_MPPA.png') }}"
+              alt="Bot MPPA"
+              class="bot-image img-fluid"
+            />
+            <h4 class="orbitron-font mt-3">Assistente Virtual MPPA</h4>
+            <p class="text-muted">
+              Estou aqui para ajudar com informações sobre o Ministério Público
+              do Pará
+            </p>
+          </div>
+        </div>
+
+        <!-- Coluna do chat -->
+        <div class="col-lg-7">
+          <div class="chat-container p-4 h-100">
+            <div class="input-controls">
+              <button
+                id="falar"
+                onclick="iniciaGravacao()"
+                class="btn btn-chat mb-2"
+              >
+                <i class="bi bi-mic-fill"></i> Falar
+              </button>
+              <audio class="d-none" id="audioPlayer" controls></audio>
+            </div>
+
+            <div class="mb-3">
+              <label for="pergunta" class="orbitron-font">
+                <i class="bi bi-person-fill"></i> Você
+              </label>
+              <textarea
+                id="pergunta"
+                class="form-control mb-2"
+                rows="4"
+                placeholder="Digite sua pergunta aqui..."
+                oninput="toggleSendButton()"
+              ></textarea>
+            </div>
+
+            <button
+              id="enviar"
+              class="btn btn-send w-100 mb-3"
+              onclick="resposta()"
+            >
+              <i class="bi bi-send-fill"></i> Enviar Pergunta
+            </button>
+
+            <div class="divider"></div>
+
+            <div class="mb-3">
+              <label for="resposta" class="orbitron-font">
+                <i class="bi bi-robot"></i> Bot MPPA
+              </label>
+              <textarea
+                id="resposta"
+                class="form-control mb-2"
+                rows="4"
+                readonly
+              >
+Olá eu sou o bot MPPA. Estou aqui para lhe apresentar informações importantes sobre o Ministério Público do Estado do Pará - MPPA. 
+              Nesse aplicativo você pode falar ou digitar sua pergunta. Como por exemplo: Como o MPPA atua para garantir os direitos da sociedade, ou
+              Como fazer uma denúncia nos canais de comunicação do MPPA.</textarea
+              >
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+              <button
+                type="button"
+                class="btn btn-close-chat"
+                data-bs-dismiss="modal"
+              >
+                <i class="bi bi-x-lg"></i> Fechar
+              </button>
+            </div>
+
+            <p class="mt-3 mb-0 text-center" id="status"></p>
+            <p class="bg-dark d-none text-light">
+              <strong class="bg-dark d-none text-light"></strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Boas-Vindas -->
+    <div
+      class="modal fade"
+      id="welcomeModal"
+      tabindex="-1"
+      aria-labelledby="welcomeModalLabel"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content"
+          style="
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+            border: 1px solid rgba(52, 152, 219, 0.5);
+          "
+        >
+          <div class="modal-header border-0">
+            <h5 class="modal-title orbitron-font" id="welcomeModalLabel">
+              Bem-vindo ao MPPA
+            </h5>
+          </div>
+          <div class="modal-body text-center">
+            <!-- Logomarca -->
+            <img
+              src="{{ url_for('static', path='img/logo.png') }}"
+              alt="Logomarca MPPA"
+              width="118"
+              height="63"
+              class="mb-3"
+            />
+            <!-- Mensagem de boas-vindas -->
+            <p class="mb-4">
+              Olá! Seja bem-vindo ao assistente virtual do Ministério Público do
+              Pará.
+            </p>
+            <p class="mb-4" style="color: aqua">
+              Estou aqui para ajudar com informações sobre o MPPA e seus
+              serviços.
+            </p>
+          </div>
+          <div class="modal-footer border-0 justify-content-center">
+            <!-- Botão Iniciar Aplicativo -->
+            <button type="button" class="btn btn-chat" id="iniciarAppBtn">
+              <i class="bi bi-play-fill"></i> Iniciar aplicativo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Mostra o modal quando a página carrega
+      document.addEventListener("DOMContentLoaded", function () {
+        const welcomeModal = new bootstrap.Modal(
+          document.getElementById("welcomeModal")
+        );
+        welcomeModal.show();
+
+        // Configura o botão para chamar textToSpeech() e fechar o modal
+        document
+          .getElementById("iniciarAppBtn")
+          .addEventListener("click", function () {
+            // Fecha o modal
+            welcomeModal.hide();
+
+            // Chama a função textToSpeech()
+            // Adiciona um pequeno delay para garantir que o modal feche antes da reprodução
+            setTimeout(() => {
+              textToSpeech().catch((error) => {
+                console.error("Erro ao reproduzir áudio:", error);
+                alert('Clique no botão "Ouvir" para reproduzir a resposta.');
+              });
+            }, 300);
+          });
+      });
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // Função para alternar entre os botões Falar e Enviar
+      function toggleSendButton() {
+        const perguntaTextarea = document.getElementById("pergunta");
+        const falarBtn = document.getElementById("falar");
+        const enviarBtn = document.getElementById("enviar");
+
+        // Se houver texto no textarea (além do texto inicial)
+        if (
+          perguntaTextarea.value.trim() !== "" &&
+          perguntaTextarea.value.trim() !==
+            "Olá eu sou o bot MPPA. Estou aqui para lhe apresentar informações importantes sobre o Ministério Público do Estado do Pará - MPPA."
+        ) {
+          falarBtn.style.display = "none";
+          enviarBtn.style.display = "block";
+        } else {
+          falarBtn.style.display = "block";
+          enviarBtn.style.display = "none";
+        }
+      }
+
+      // Função para enviar a pergunta (será implementada conforme necessidade)
+      function enviarPergunta() {
+        const pergunta = document.getElementById("pergunta").value;
+        // Aqui você implementaria a lógica para enviar a pergunta
+        console.log("Pergunta enviada:", pergunta);
+
+        // Simulação de resposta (substitua pela sua lógica real)
+        document.getElementById("resposta").value =
+          "Processando sua pergunta: " + pergunta;
+      }
+
+      // Inicializa verificando o estado do textarea
+      document.addEventListener("DOMContentLoaded", toggleSendButton);
+    </script>
+  </body>
+</html>
